@@ -909,15 +909,32 @@
     </section>
 
     <section id="contact">
-      <div class="section-inner">
-        <div class="section-heading reveal">
-          <h2>Ready to modernize your systems?</h2>
-          <p>Talk to TechStride about AI, cloud, cybersecurity, data, product delivery, or employee workspace design.</p>
-        </div>
-        <button class="btn btn-primary" onclick="openLogin()">Employee Login</button>
-        <a class="btn btn-soft" href="mailto:hr@techstride.com">Contact Advisory Team</a>
-      </div>
-    </section>
+  <div class="section-inner">
+    <div class="section-heading reveal">
+      <h2>Contact TechStride</h2>
+      <p>Send us your requirements. We will respond to your Zoho mail.</p>
+    </div>
+
+    <form action="https://formsubmit.co/info@techstrideadv.com" method="POST" class="contact-form">
+
+      <!-- Disable captcha -->
+      <input type="hidden" name="_captcha" value="false">
+
+      <!-- Success redirect -->
+      <input type="hidden" name="_next" value="https://techstrideadv.com/thankyou.html">
+
+      <input type="text" name="name" placeholder="Your Name" required style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;border:1px solid #ccc;">
+
+      <input type="email" name="email" placeholder="Your Email" required style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;border:1px solid #ccc;">
+
+      <textarea name="message" placeholder="Your Message" required style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;border:1px solid #ccc;height:120px;"></textarea>
+
+      <button type="submit" class="btn btn-primary">Send Message</button>
+
+    </form>
+
+  </div>
+</section>
   </main>
 
   <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
