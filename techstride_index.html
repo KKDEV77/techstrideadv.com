@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechStride Advisors | Employee Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --ink: #111827;
+      --slate: #334155;
+      --muted: #64748b;
+      --paper: #f8fafc;
+      --white: #ffffff;
+      --teal: #14b8a6;
+      --blue: #2563eb;
+      --coral: #fb7185;
+      --amber: #f59e0b;
+      --line: rgba(15, 23, 42, 0.12);
+      --shadow: 0 24px 70px rgba(15, 23, 42, 0.16);
+      --radius: 8px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(20, 184, 166, 0.18), transparent 26%),
+        radial-gradient(circle at 86% 8%, rgba(251, 113, 133, 0.14), transparent 24%),
+        linear-gradient(135deg, #f8fafc 0%, #e0f2fe 48%, #fff7ed 100%);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 16px clamp(20px, 5vw, 72px);
+      background: rgba(248, 250, 252, 0.86);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 850;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.18);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--slate);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .nav a {
+      position: relative;
+    }
+
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -7px;
+      width: 0;
+      height: 2px;
+      background: var(--teal);
+      transition: width 0.25s ease;
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 850;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.16);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, #0f766e, var(--teal));
+      box-shadow: 0 18px 34px rgba(20, 184, 166, 0.25);
+    }
+
+    .btn-dark {
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .btn-soft {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(15, 23, 42, 0.1);
+    }
+
+    .employee-chip {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      color: #0f766e;
+      background: rgba(20, 184, 166, 0.12);
+      border: 1px solid rgba(20, 184, 166, 0.22);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      padding: 134px clamp(20px, 6vw, 86px) 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15, 23, 42, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.055) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 84%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.06fr 0.94fr;
+      gap: clamp(34px, 6vw, 76px);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #0f766e;
+      background: rgba(20, 184, 166, 0.13);
+      border: 1px solid rgba(20, 184, 166, 0.22);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: fadeUp 0.65s ease both;
+    }
+
+    h1 {
+      max-width: 800px;
+      margin-top: 22px;
+      color: #07111f;
+      font-size: clamp(42px, 7vw, 78px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      animation: fadeUp 0.65s ease 0.08s both;
+    }
+
+    .hero-copy {
+      max-width: 640px;
+      margin-top: 24px;
+      color: #334155;
+      font-size: clamp(17px, 2vw, 21px);
+      animation: fadeUp 0.65s ease 0.16s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+      animation: fadeUp 0.65s ease 0.24s both;
+    }
+
+    .hero-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+      animation: fadeUp 0.65s ease 0.32s both;
+    }
+
+    .proof-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      color: var(--slate);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .portal-preview {
+      position: relative;
+      min-height: 530px;
+      animation: slideIn 0.75s ease 0.16s both;
+    }
+
+    .dashboard-card {
+      position: absolute;
+      top: 24px;
+      right: 0;
+      width: min(450px, 100%);
+      padding: 24px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .panel-head h2 {
+      font-size: 18px;
+    }
+
+    .secure-badge {
+      color: #0f766e;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(20, 184, 166, 0.12);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .metric {
+      min-height: 118px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .metric b {
+      display: block;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .employee-card {
+      position: absolute;
+      left: 0;
+      bottom: 32px;
+      width: min(360px, 88%);
+      padding: 22px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: #101827;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .employee-card h3 {
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .employee-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-top: 12px;
+      color: #dbeafe;
+      font-size: 14px;
+    }
+
+    .employee-step span {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #06211d;
+      background: var(--teal);
+      font-weight: 950;
+    }
+
+    section {
+      padding: 84px clamp(20px, 6vw, 86px);
+    }
+
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 38px;
+    }
+
+    .section-heading h2 {
+      max-width: 700px;
+      color: #07111f;
+      font-size: clamp(30px, 4.4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .section-heading p {
+      max-width: 440px;
+      color: var(--muted);
+    }
+
+    .services {
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 230px;
+      padding: 24px;
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid rgba(15, 23, 42, 0.09);
+      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 24px 56px rgba(15, 23, 42, 0.12);
+    }
+
+    .card-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 20px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: var(--accent);
+      font-weight: 900;
+    }
+
+    .card h3 {
+      color: var(--ink);
+      font-size: 21px;
+      line-height: 1.22;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .employee-portal {
+      color: #fff;
+      background: linear-gradient(135deg, #101827, #0f766e);
+    }
+
+    .employee-portal .section-heading h2,
+    .employee-portal .section-heading p {
+      color: #fff;
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .portal-feature {
+      min-height: 215px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .portal-feature span {
+      color: var(--teal);
+      font-weight: 950;
+      display: inline-flex;
+      margin-bottom: 22px;
+    }
+
+    .portal-feature h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .portal-feature p {
+      color: #dbeafe;
+      font-size: 15px;
+    }
+
+    .login-panel {
+      display: none;
+      margin-top: 34px;
+      padding: 24px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .login-panel.active {
+      display: block;
+    }
+
+    .workspace-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .workspace-head h3 {
+      font-size: 24px;
+    }
+
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .workspace-tile {
+      min-height: 140px;
+      padding: 18px;
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .workspace-tile strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .workspace-tile span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer {
+      padding: 50px clamp(20px, 6vw, 86px) 24px;
+      color: #fff;
+      background: #07111f;
+    }
+
+    .footer-grid {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .footer h3,
+    .footer h4 {
+      margin-bottom: 12px;
+    }
+
+    .footer p,
+    .footer a {
+      display: block;
+      margin-top: 8px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .footer-bottom {
+      width: min(1180px, 100%);
+      margin: 30px auto 0;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(7, 17, 31, 0.62);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.open {
+      display: grid;
+    }
+
+    .login-card {
+      width: min(500px, 100%);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: popIn 0.25s ease both;
+    }
+
+    .login-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+    }
+
+    .login-head h2 {
+      font-size: 24px;
+      color: var(--ink);
+    }
+
+    .login-head p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 3px;
+    }
+
+    .close {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .login-body {
+      padding: 24px;
+    }
+
+    .field {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .field input {
+      width: 100%;
+      margin-top: 7px;
+      padding: 13px 14px;
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      border-radius: var(--radius);
+      outline: none;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .field input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
+    }
+
+    .hint {
+      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: #ecfeff;
+      border: 1px solid rgba(20, 184, 166, 0.2);
+      color: #0f766e;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .error {
+      display: none;
+      margin-bottom: 14px;
+      padding: 11px 12px;
+      border-radius: var(--radius);
+      background: #fff1f2;
+      border: 1px solid rgba(251, 113, 133, 0.25);
+      color: #be123c;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .login-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .login-footer button {
+      flex: 1;
+    }
+
+    .fine-print {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(28px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .grid,
+      .workspace-grid,
+      .portal-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading p {
+        margin-top: 12px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header {
+        position: sticky;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 18px;
+      }
+
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+        gap: 16px;
+        padding-bottom: 4px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 58px;
+      }
+
+      .portal-preview {
+        min-height: auto;
+        display: grid;
+        gap: 16px;
+      }
+
+      .dashboard-card,
+      .employee-card {
+        position: static;
+        width: 100%;
+      }
+
+      .employee-card {
+        animation: none;
+      }
+
+      .grid,
+      .metric-grid,
+      .workspace-grid,
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 64px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="#home" aria-label="TechStride Advisors home">
+      <span class="brand-mark">T</span>
+      <span>TechStride Advisors</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#services">Services</a>
+      <a href="#employee">Employee Portal</a>
+      <a href="#contact">Contact</a>
+      <span id="employeeChip" class="employee-chip"></span>
+      <button id="loginNavBtn" class="btn btn-dark" onclick="openLogin()">Employee Login</button>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">AI, cloud, data and secure product delivery</div>
+          <h1>Build intelligent systems with a secure employee workspace.</h1>
+          <p class="hero-copy">
+            TechStride Advisors helps modern teams ship AI, cloud, data, product, and security initiatives. Employees can now sign in with their company email to access a private workspace.
+          </p>
+          <div class="hero-actions">
+            <a href="#services" class="btn btn-primary">Explore Services</a>
+            <button class="btn btn-soft" onclick="openLogin()">Employee Email Login</button>
+          </div>
+          <div class="hero-proof">
+            <span class="proof-pill">Company email access</span>
+            <span class="proof-pill">Employee dashboard</span>
+            <span class="proof-pill">Session saved locally</span>
+          </div>
+        </div>
+
+        <div class="portal-preview" aria-label="Employee portal preview">
+          <div class="dashboard-card">
+            <div class="panel-head">
+              <h2>Employee Workspace</h2>
+              <span class="secure-badge">Email verified</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><b>8</b><span>active client programs</span></div>
+              <div class="metric"><b>24</b><span>delivery tasks this week</span></div>
+              <div class="metric"><b>96%</b><span>security checklist coverage</span></div>
+              <div class="metric"><b>12</b><span>knowledge base updates</span></div>
+            </div>
+          </div>
+
+          <div class="employee-card">
+            <h3>Employee login flow</h3>
+            <div class="employee-step"><span>1</span><p>Use your company email address.</p></div>
+            <div class="employee-step"><span>2</span><p>Enter your employee access code.</p></div>
+            <div class="employee-step"><span>3</span><p>Access your own dashboard and resources.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="services">
+      <div class="section-inner">
+        <div class="section-heading reveal">
+          <h2>Consultancy services with execution discipline.</h2>
+          <p>TechStride combines advisory thinking with production-ready delivery across AI, cloud, security, product, and data systems.</p>
+        </div>
+        <div class="grid">
+          <article class="card reveal" style="--accent:#14b8a6"><div class="card-icon">AI</div><h3>AI & Automation</h3><p>Use-case discovery, workflow automation, model strategy, and measurable AI pilots.</p></article>
+          <article class="card reveal" style="--accent:#2563eb"><div class="card-icon">CL</div><h3>Cloud & DevOps</h3><p>Cloud architecture, delivery pipelines, observability, reliability, and cost control.</p></article>
+          <article class="card reveal" style="--accent:#fb7185"><div class="card-icon">SE</div><h3>Cybersecurity</h3><p>Security readiness, controls, risk assessment, launch reviews, and governance support.</p></article>
+          <article class="card reveal" style="--accent:#f59e0b"><div class="card-icon">DA</div><h3>Data Engineering</h3><p>Data pipelines, analytics layers, reporting, governance, and trusted decision systems.</p></article>
+          <article class="card reveal" style="--accent:#8b5cf6"><div class="card-icon">PD</div><h3>Product Development</h3><p>MVP strategy, architecture, UX direction, launch plans, and engineering delivery support.</p></article>
+          <article class="card reveal" style="--accent:#22c55e"><div class="card-icon">DX</div><h3>Digital Transformation</h3><p>Leadership alignment, platform modernization, vendor planning, and execution roadmaps.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="employee" class="employee-portal">
+      <div class="section-inner">
+        <div class="section-heading reveal">
+          <h2>Employee portal for internal access.</h2>
+          <p>Employees sign in with their company email to see resources, tasks, announcements, and delivery tools in one place.</p>
+        </div>
+
+        <div class="portal-grid">
+          <div class="portal-feature reveal"><span>01</span><h3>Personal workspace</h3><p>Show the employee name, email, role, tasks, and internal resource shortcuts after login.</p></div>
+          <div class="portal-feature reveal"><span>02</span><h3>Company email guard</h3><p>Only approved company-domain email addresses can enter the portal demo.</p></div>
+          <div class="portal-feature reveal"><span>03</span><h3>Session memory</h3><p>The browser remembers the employee session using local storage until logout.</p></div>
+          <div class="portal-feature reveal"><span>04</span><h3>Backend-ready</h3><p>The login flow can later connect to Google Workspace, Microsoft Entra, Auth0, or a Flask API.</p></div>
+        </div>
+
+        <div id="employeeWorkspace" class="login-panel">
+          <div class="workspace-head">
+            <div>
+              <h3 id="workspaceTitle">Welcome back</h3>
+              <p id="workspaceEmail"></p>
+            </div>
+            <button class="btn btn-soft" onclick="logoutEmployee()">Logout</button>
+          </div>
+          <div class="workspace-grid">
+            <div class="workspace-tile"><strong>My Client Programs</strong><span>Review active advisory engagements and upcoming checkpoints.</span></div>
+            <div class="workspace-tile"><strong>Delivery Tasks</strong><span>See assigned work, blockers, and priorities for this week.</span></div>
+            <div class="workspace-tile"><strong>Knowledge Base</strong><span>Open internal templates, playbooks, architecture notes, and security checklists.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-inner">
+        <div class="section-heading reveal">
+          <h2>Ready to modernize your systems?</h2>
+          <p>Talk to TechStride about AI, cloud, cybersecurity, data, product delivery, or employee workspace design.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openLogin()">Employee Login</button>
+        <a class="btn btn-soft" href="mailto:hello@techstride.example">Contact Advisory Team</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="login-card">
+      <div class="login-head">
+        <div>
+          <h2 id="loginTitle">Employee Email Login</h2>
+          <p>Use your TechStride employee email to access the workspace.</p>
+        </div>
+        <button class="close" onclick="closeLogin()" aria-label="Close login">&times;</button>
+      </div>
+      <form class="login-body" onsubmit="loginEmployee(event)">
+        <div class="hint">
+          Demo access code: <strong>TS-2026</strong>. Allowed emails end with <strong>@techstrideadvisors.com</strong>.
+        </div>
+        <div id="loginError" class="error"></div>
+        <label class="field">
+          Employee email
+          <input id="employeeEmail" type="email" placeholder="name@techstrideadvisors.com" autocomplete="email" required />
+        </label>
+        <label class="field">
+          Access code
+          <input id="employeeCode" type="password" placeholder="Enter employee access code" autocomplete="current-password" required />
+        </label>
+        <div class="login-footer">
+          <button class="btn btn-primary" type="submit">Login</button>
+          <button class="btn btn-soft" type="button" onclick="fillDemoLogin()">Use Demo</button>
+        </div>
+        <p class="fine-print">
+          This is a front-end login prototype. For production, connect this screen to a secure backend with SSO, magic links, MFA, hashed passwords, and server-side sessions.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div><h3>TechStride Advisors</h3><p>Engineering intelligent infrastructure and secure digital systems for modern businesses.</p></div>
+      <div><h4>Services</h4><a href="#services">AI & Automation</a><a href="#services">Cloud & DevOps</a><a href="#services">Cybersecurity</a></div>
+      <div><h4>Employees</h4><a href="#employee">Portal</a><button class="btn btn-soft" onclick="openLogin()">Login</button></div>
+      <div><h4>Contact</h4><p>hello@techstride.example</p><p>employee@techstride.example</p></div>
+    </div>
+    <div class="footer-bottom">Copyright 2026 TechStride Advisors. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const allowedDomain = "@techstrideadvisors.com";
+    const demoCode = "TS-2026";
+    const storageKey = "techstride_employee_session";
+
+    function openLogin() {
+      document.getElementById("loginModal").classList.add("open");
+      document.body.classList.add("modal-open");
+      setTimeout(() => document.getElementById("employeeEmail").focus(), 120);
+    }
+
+    function closeLogin() {
+      document.getElementById("loginModal").classList.remove("open");
+      document.body.classList.remove("modal-open");
+      clearError();
+    }
+
+    function fillDemoLogin() {
+      document.getElementById("employeeEmail").value = "employee@techstrideadvisors.com";
+      document.getElementById("employeeCode").value = demoCode;
+      clearError();
+    }
+
+    function loginEmployee(event) {
+      event.preventDefault();
+      const email = document.getElementById("employeeEmail").value.trim().toLowerCase();
+      const code = document.getElementById("employeeCode").value.trim();
+
+      if (!email.endsWith(allowedDomain)) {
+        showError("Please use your TechStride employee email address.");
+        return;
+      }
+
+      if (code !== demoCode) {
+        showError("Invalid access code. Use TS-2026 for this demo.");
+        return;
+      }
+
+      const employeeName = formatEmployeeName(email);
+      const session = {
+        email,
+        name: employeeName,
+        loginAt: new Date().toISOString()
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(session));
+      applySession(session);
+      closeLogin();
+      document.getElementById("employee").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function logoutEmployee() {
+      localStorage.removeItem(storageKey);
+      document.getElementById("employeeWorkspace").classList.remove("active");
+      document.getElementById("employeeChip").style.display = "none";
+      document.getElementById("employeeChip").textContent = "";
+      document.getElementById("loginNavBtn").style.display = "inline-flex";
+      openLogin();
+    }
+
+    function applySession(session) {
+      document.getElementById("employeeWorkspace").classList.add("active");
+      document.getElementById("workspaceTitle").textContent = "Welcome back, " + session.name;
+      document.getElementById("workspaceEmail").textContent = session.email;
+      document.getElementById("employeeChip").textContent = session.email;
+      document.getElementById("employeeChip").style.display = "inline-flex";
+      document.getElementById("loginNavBtn").style.display = "none";
+    }
+
+    function formatEmployeeName(email) {
+      const raw = email.split("@")[0].replace(/[._-]+/g, " ");
+      return raw.replace(/\b\w/g, letter => letter.toUpperCase());
+    }
+
+    function showError(message) {
+      const error = document.getElementById("loginError");
+      error.textContent = message;
+      error.classList.add("show");
+    }
+
+    function clearError() {
+      const error = document.getElementById("loginError");
+      error.textContent = "";
+      error.classList.remove("show");
+    }
+
+    document.getElementById("loginModal").addEventListener("click", event => {
+      if (event.target.id === "loginModal") closeLogin();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeLogin();
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey));
+      if (saved && saved.email) applySession(saved);
+    } catch (error) {
+      localStorage.removeItem(storageKey);
+    }
+  </script>
+</body>
+</html>
